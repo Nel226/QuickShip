@@ -1,40 +1,37 @@
 # main.py
 import sys
 sys.path.append("..")
-
 from source.users import User
-from source.database import create_users_table, create_connection  # Ajoutez "create_connection"
+from data.database import create_users_table
 
-def main():
-    # Créer la table "users" dans la base de données s'il n'existe pas déjà
-    create_users_table()
+# Créer la table "users" dans la base de données s'il n'existe pas déjà
+create_users_table()
 
-    print("Bienvenue dans l'application QuickShip !")
-    print("Veuillez vous inscrire pour commencer.")
+print("Bienvenue dans l'application QuickShip !")
+while True:
+    have_compte=input(" Tapez sur la touche 1 pour vous connecter si vous avez déjà un compte, sinon tapez sur 2 pour vous inscrire :")
+    if (have_compte == "1"):
+        email = input("Adresse e-mail: ")
+        password = input("Mot de passe: ")
+        
+        user = User.login(email, password)
+        if user is not None:
+            print(f"Connexion réussie. Bienvenue, {user[1]}!")
+            break
+        else:
+            print("La connexion a échoué. Veuillez vérifier vos informations de connexion.")
 
-    name = input("Nom complet: ")
-    address = input("Adresse: ")
-    email = input("Adresse e-mail: ")
-    password = input("Mot de passe: ")
+    elif(have_compte=="2"):
+        print("Commencençons l'inscription.")
+        name = input("Nom: ")
+        firstname = input ("Prénom")
+        address = input("Adresse: ")
+        email = input("Adresse e-mail: ")
+        password = input("Mot de passe: ")
 
-    new_user = User.create_user(name, address, email, password)
-    print(f"Utilisateur enregistré avec l'ID : {new_user.id}")
-    
-    # Afficher la liste des utilisateurs enregistrés après l'enregistrement
-    afficher_utilisateurs_enregistres()
+        new_user = User.create_user(name, address, email, password)
+        print(f"Utilisateur enregistré avec l'ID : {new_user.id}")
+        break
+    else:
+        print("Option  invalide ! Veuillez taper sur la touche 1 ou 2.")
 
-def afficher_utilisateurs_enregistres():
-    connection = create_connection()  # Utilisez la fonction pour établir la connexion
-    cursor = connection.cursor()
-
-    cursor.execute('SELECT * FROM users')
-    users = cursor.fetchall()
-
-    print("Liste des utilisateurs enregistrés :")
-    for user in users:
-        print(f"ID: {user[0]}, Nom: {user[1]}, Adresse e-mail: {user[3]}")
-
-    connection.close()
-
-if __name__ == "__main__":
-    main()
