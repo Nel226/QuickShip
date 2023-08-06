@@ -1,4 +1,5 @@
-import stripe
+import sqlite3
+from data.database import create_connection
 
 class Colis:
     def __init__(self, nom_espediteur,address_espediteur, nom_destinataire,address_destinataire, poids):
@@ -8,6 +9,36 @@ class Colis:
         self.address_destinataire = address_destinataire
         self.poids = poids
         self.cout_livraison = 0  # Propriété pour le coût d'expédition, initialisée à 0 par défaut
+
+    def create_colis(nom_espediteur, address_espediteur, nom_destinataire, address_destinataire ,poids):
+        # Créer une connexion à la base de données
+        connection = sqlite3.connect('database.db')
+        cursor = connection.cursor()
+
+        # Exécuter la requête pour insérer un nouvel utilisateur
+        cursor.execute('INSERT INTO colis (nom_espediteur,address_espediteur,nom_destinataire,address_destinataire,poids) VALUES (?, ?, ?, ?, ?)',
+                    (nom_espediteur,address_espediteur,nom_destinataire,address_destinataire,poids))
+        colis_id = cursor.lastrowid
+
+        # Enregistrer les changements dans la base de données et fermer la connexion
+        connection.commit()
+        connection.close()
+
+        new_colis = Colis(nom_espediteur, address_espediteur,  nom_destinataire, address_destinataire,poids)
+        new_colis.id = colis_id
+        return new_colis
+    
+    @staticmethod
+    def get_all_colis():
+        connection = sqlite3.connect('database.db')
+        cursor = connection.cursor()
+
+        #récupérer tous les utilisateurs
+        cursor.execute('SELECT * FROM colis')
+        users = cursor.fetchall()
+
+        connection.close()
+        return users
 
     def calcul_cout_livraison(self):
         Frais_expédition_par_kg_ordinaire = 1000
