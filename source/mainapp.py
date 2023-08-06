@@ -3,11 +3,12 @@ import bcrypt
 sys.path.append("..")
 from source.users import User
 from source.colis import Colis
-from data.database import create_users_table
+from data.database import create_users_table, create_colis_table
 
 # Créer la table "users" dans la base de données s'il n'existe pas déjà
 create_users_table()
-
+# Créer la table "COLIS" dans la base de données s'il n'existe pas déjà
+create_colis_table()
 class MainApp:
     def __init__(self):
         self.current_user = None
@@ -21,8 +22,9 @@ class MainApp:
             print("3. Faire une commande")
             print("4. Afficher les utilisateurs")
             print("5. Se déconnecter")
+            print("6. Historique de commande")
 
-        print("6. Quitter")
+        print("7. Quitter")
 
         choice = input("Veuillez choisir une option (1-7) : ")
         return choice
@@ -64,6 +66,7 @@ class MainApp:
             address_destinataire=address_destinataire,
             poids=poids,
         )
+        new_colis = Colis.create_colis(nom_espediteur, address_espediteur, nom_destinataire, address_destinataire,poids)
         colis.calcul_cout_livraison()
 
         # Traite le paiement
@@ -71,6 +74,12 @@ class MainApp:
 
         # Affiche les informations du colis
         print(colis)
+
+    def display_colis(self):
+        colis = Colis.get_all_colis()
+        for col in colis:
+            print(f"nom espediteur: {col[0]}, address espediteur: {col[1]}, nom destinataire: {col[2]}, address destinateur: {col[3]}, poids: {col[4]}")
+
 
     def display_users(self):
         users = User.get_all_users()
@@ -98,7 +107,10 @@ class MainApp:
             elif choice == "5" and self.current_user is not None:
                 self.logout()
                 choice = self.main_menu()
-            elif choice == "6":
+            elif choice == "6" and self.current_user is not None:
+                self.display_colis()
+                choice = self.main_menu()
+            elif choice == "7":
                 print("Merci d'avoir utilisé notre service ! Au revoir.")
                 break
 
