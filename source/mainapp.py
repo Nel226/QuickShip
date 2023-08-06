@@ -19,9 +19,9 @@ class MainApp:
             print("1. Créer un nouvel utilisateur")
             print("2. Se connecter")
         else:
-            print("3. Faire une commande")
-            print("4. Afficher les utilisateurs")
-            print("5. Se déconnecter")
+            print("3. Passer une commande")
+            print("4. Se déconnecter")
+            print("5. Modifier le profil")
             print("6. Historique de commande")
 
         print("7. Quitter")
@@ -54,31 +54,34 @@ class MainApp:
 
     def commande(self):
         print("Entrez les informations du colis!")
-        nom_espediteur = input("Entrer votre nom:")
-        address_espediteur = input("Entrez votre addresse:")
+        #nom_espediteur = input("Entrer votre nom:")
+        #address_espediteur = input("Entrez votre addresse:")
         nom_destinataire = input("Entrez le nom du destinataire:")
         address_destinataire = input("Entrez l'address du destinataire:")
         poids = input("Entrez le poids du colis")
         colis = Colis(
-            nom_espediteur=nom_espediteur,
-            address_espediteur=address_espediteur,
+            nom_espediteur=self.current_user.name,
+            address_espediteur=self.current_user.address,
             nom_destinataire=nom_destinataire,
             address_destinataire=address_destinataire,
             poids=poids,
         )
-        new_colis = Colis.create_colis(nom_espediteur, address_espediteur, nom_destinataire, address_destinataire,poids)
         colis.calcul_cout_livraison()
 
         # Traite le paiement
-        colis.process_payment()
+        colis.process_payment() 
+        if colis.process_payment() == True :
+            new_colis = Colis.create_colis(self.current_user.name, self.current_user.address, nom_destinataire, address_destinataire,poids)
+
 
         # Affiche les informations du colis
-        print(colis)
+        #print(colis)
 
     def display_colis(self):
         colis = Colis.get_all_colis()
         for col in colis:
-            print(f"nom espediteur: {col[0]}, address espediteur: {col[1]}, nom destinataire: {col[2]}, address destinateur: {col[3]}, poids: {col[4]}")
+            if col[1] == self.current_user.name:
+                print(f"nom espediteur: {col[1]}, address espediteur: {col[2]}, nom destinataire: {col[3]}, address destinateur: {col[4]}, poids: {col[5]}")
 
 
     def display_users(self):
@@ -88,6 +91,12 @@ class MainApp:
 
     def logout(self):
         self.current_user = None
+
+    def modifier(self):
+        name = input("Nom: ")
+        address = input("Adresse: ")
+        email = input("Adresse e-mail: ")
+        self.current_user.update_user(name=name, address=address, email=email)
 
     def run(self):
         choice = self.main_menu()
@@ -102,10 +111,10 @@ class MainApp:
                 self.commande()
                 choice = self.main_menu()
             elif choice == "4" and self.current_user is not None:
-                self.display_users()
+                self.logout()
                 choice = self.main_menu()
             elif choice == "5" and self.current_user is not None:
-                self.logout()
+                self.modifier()
                 choice = self.main_menu()
             elif choice == "6" and self.current_user is not None:
                 self.display_colis()
@@ -116,3 +125,4 @@ class MainApp:
 
             else:
                 print("Option invalide. Veuillez choisir une option valide.")
+                break
