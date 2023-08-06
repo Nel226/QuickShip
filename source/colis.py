@@ -48,10 +48,11 @@ class Colis:
             self.cout_livraison = self.poids * Frais_expédition_par_kg_fragile
         else:
             self.cout_livraison = self.poids * Frais_expédition_par_kg_ordinaire
+        return self.cout_livraison
 
     @staticmethod
     def check_infos_payement(card_number,exp_month,exp_year,cvc):
-        if card_number and exp_month.isdigit() and exp_year.isdigit() and cvc:
+        if len(card_number)== 16 and exp_month.isdigit() and exp_year.isdigit() and len(cvc)==3 and 1 <= exp_month <= 12 and exp_year > 2023:
             return True
         else:
             return False
@@ -67,9 +68,13 @@ class Colis:
 
         if Colis.check_infos_payement(card_number, exp_month, exp_year, cvc) == True:
             print("Le paiement a été effectué avec succès !")
+            return True
         else:
             print("Le paiement a échoué. Veuillez réessayer.")
+            return False
 
     def __str__(self):
-        self.calcul_cout_livraison()  # Calcul du coût d'expédition
-        return f"Colis de {self.nom_espediteur} à destination de {self.address_espediteur}, poids : {self.poids} kg, coût d'expédition : {self.cout_livraison} F CFA"
+        if self.process_payment() == True:
+            return f"Colis de {self.nom_espediteur} à destination de {self.address_espediteur}, poids : {self.poids} kg, coût d'expédition : {self.calcul_cout_livraison()} F CFA"
+        else:
+            return 0
