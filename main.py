@@ -1,24 +1,22 @@
-# main.py
-import sys
-import bcrypt
-sys.path.append("..")
-from source.users import User
-from data.database import create_users_table
+from source.mainapp import MainApp
+from source.colis import Colis
 
-# Créer la table "users" dans la base de données s'il n'existe pas déjà
-create_users_table()
+if __name__ == "__main__":
+    app = MainApp()
+    app.run()
 
-print("Bienvenue dans l'application QuickShip !")
-while True:
-    have_compte=input(" Tapez sur la touche 1 pour vous connecter si vous avez déjà un compte, sinon tapez sur 2 pour vous inscrire :")
-    if (have_compte == "1"):
+
+
+"""while True:
+    choice = main_menu()
+    if (choice == "2"):
         email = input("Adresse e-mail: ")
         password = input("Mot de passe: ")
         
         user = User.login(email, password)
         if user is not None:
             print(f"Connexion réussie. Bienvenue, {user.name}!")
-            update = input("1 pour modifier 0 pour continuer")
+            update = input("1 pour modifier 0 pour continuer et 3 pour payer")
             if update == "1":
                 name = input("Nom: ")
                 firstname = input ("Prénom:")
@@ -29,11 +27,32 @@ while True:
                 users = User.get_all_users()
                 for user in users:
                     print(f"ID: {user[0]}, Nom: {user[1]}, Adresse: {user[2]}, E-mail: {user[3]}")
+            elif update == "3":
+                print("Entrez les informations du colis!")
+                nom_espediteur = input("Entrer votre nom:")
+                address_espediteur = input("Entrez votre addresse:")
+                nom_destinataire = input("Entrez le nom du destinataire")
+                address_destinataire = input("Entrez l'address du destinataire")
+                poids = input("Entrez le poids du colis")
+                Colis = Colis(
+                    nom_espediteur=nom_espediteur,
+                    address_espediteur=nom_destinataire,
+                    nom_destinataire=nom_destinataire,
+                    address_destinataire=address_destinataire,
+                    poids=poids,
+                )
+                Colis.calcul_cout_livraison()
+
+                # Traite le paiement
+                Colis.process_payment()
+
+                # Affiche les informations du colis
+                print(Colis)
             break
         else:
             print("La connexion a échoué. Veuillez vérifier vos informations de connexion.")
 
-    elif(have_compte=="2"):
+    elif(choice == "1"):
         print("Commencençons l'inscription.")
         name = input("Nom: ")
         firstname = input ("Prénom:")
@@ -50,5 +69,5 @@ while True:
             print(f"Utilisateur enregistré avec l'ID : {new_user.id}")
             break
     else:
-        print("Option  invalide ! Veuillez taper sur la touche 1 ou 2.")
+        print("Option  invalide ! Veuillez taper sur la touche 1 ou 2.")"""
 
