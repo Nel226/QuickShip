@@ -47,9 +47,8 @@ class User:
         connection = sqlite3.connect('database.db')
         cursor = connection.cursor()
 
-        #mettre à jour les informations de l'utilisateur
         cursor.execute('UPDATE users SET name=?, address=?, email=? WHERE id=?',
-                        (name, address, email, self.id))
+                       (name, address, email, self.id))
         connection.commit()
         connection.close()
 
@@ -57,6 +56,7 @@ class User:
         self.address = address
         self.email = email
         print("Informations mises à jour avec succès!")
+
 
     @staticmethod
     def get_all_users():
