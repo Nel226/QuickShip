@@ -52,7 +52,7 @@ class Colis:
 
     @staticmethod
     def check_infos_payement(card_number,exp_month,exp_year,cvc):
-        if len(card_number)== 16 and exp_month.isdigit() and exp_year.isdigit() and len(cvc)==3 and 1 <= exp_month <= 12 and exp_year > 2023:
+        if len(card_number) == 16 and str(exp_month).isdigit() and str(exp_year).isdigit() and len(cvc) == 3 and 1 <= int(exp_month) <= 12 and int(exp_year) > 2023:
             return True
         else:
             return False
@@ -74,7 +74,4 @@ class Colis:
             return False
 
     def __str__(self):
-        if self.process_payment() == True:
-            return f"Colis de {self.nom_espediteur} à destination de {self.address_espediteur}, poids : {self.poids} kg, coût d'expédition : {self.calcul_cout_livraison()} F CFA"
-        else:
-            return 0
+        return f"Colis de {self.nom_espediteur} à destination de {self.address_espediteur}, poids : {self.poids} kg, coût d'expédition : {self.calcul_cout_livraison()} F CFA"
