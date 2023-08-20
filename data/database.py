@@ -4,7 +4,7 @@ import sqlite3
 # Fonction pour établir la connexion à la base de données SQLite
 def create_connection():
     return sqlite3.connect('database.db')
-
+("Ouango Bénédicte", "Bobo", "nouveauemail@gmail.com")
 # Fonction pour créer la table "users" dans la base de données
 def create_users_table():
     connection = create_connection()
@@ -20,7 +20,11 @@ def create_users_table():
         );
     '''
     cursor.execute(create_table_query)
-
+    # Ajoutez un utilisateur initial à la table users
+    cursor.execute('''
+        INSERT INTO users (name, address, email, password)
+        VALUES (?, ?, ?, ?)
+    ''', ('Ouango Coco', 'Ouaga', 'coco@gmail.com', '1234'))
     connection.commit()
     connection.close()
 
