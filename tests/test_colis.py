@@ -5,6 +5,7 @@ sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), "..")
 
 import unittest
 from source.colis import Colis
+from data.database import create_connection
 
 class TestColisMethods(unittest.TestCase):
 
