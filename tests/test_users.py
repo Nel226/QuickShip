@@ -3,11 +3,12 @@ import sys
 
 sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), "..")))
 from source.users import User
-from data.database import create_connection
+from data.database import create_users_table, create_colis_table
 import pytest
 
 # Créer la table "users" dans la base de données s'il n'existe pas déjà
 create_users_table()
+create_colis_table()
 
 # Test de la méthode validate_email
 def test_validate_email_valid():
