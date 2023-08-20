@@ -2,7 +2,13 @@ import os
 import sys
 
 sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), "..")))
-from data.database import create_connection
+from data.database import create_users_table, create_colis_table
+
+# Create the "users" and "colis" tables before running the tests
+create_users_table()
+create_colis_table()
+
+import pytest
 from source.colis import Colis
 
 
