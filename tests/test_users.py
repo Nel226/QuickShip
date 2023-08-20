@@ -6,6 +6,9 @@ from source.users import User
 from data.database import create_connection
 import pytest
 
+# Créer la table "users" dans la base de données s'il n'existe pas déjà
+create_users_table()
+
 # Test de la méthode validate_email
 def test_validate_email_valid():
     assert User.validate_email("user@example.com") is None
